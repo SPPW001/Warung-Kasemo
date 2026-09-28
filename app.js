@@ -1,3 +1,26 @@
+// Loading screen
+const siteLoader = document.getElementById('siteLoader');
+const loaderStartedAt = performance.now();
+let loaderDismissed = false;
+
+function dismissSiteLoader() {
+  if (!siteLoader || loaderDismissed) return;
+  loaderDismissed = true;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const minimumVisible = reducedMotion ? 180 : 900;
+  const wait = Math.max(0, minimumVisible - (performance.now() - loaderStartedAt));
+
+  window.setTimeout(() => {
+    siteLoader.classList.add('is-hidden');
+    document.body.classList.remove('is-loading');
+    siteLoader.addEventListener('transitionend', () => siteLoader.remove(), { once: true });
+  }, wait);
+}
+
+window.addEventListener('load', dismissSiteLoader, { once: true });
+window.setTimeout(dismissSiteLoader, 4000);
+
 const menuData = [
   { category: 'Paket Keluarga', items: [
     { name: 'Paket Argopuro (4 orang)', price: 165000, note: '4 nasi, gurame selimut kangkung, nila tempe asam manis, 2 ayam crispy, cah tauge, 4 lemon tea' },
